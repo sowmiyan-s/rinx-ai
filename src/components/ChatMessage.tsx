@@ -7,8 +7,17 @@ interface ChatMessageProps {
   isLatest?: boolean;
 }
 
+// Sanitize bot responses by removing unwanted symbols
+const sanitizeContent = (content: string): string => {
+  return content
+    .replace(/[%*\-$#]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 export function ChatMessage({ message, isLatest }: ChatMessageProps) {
   const isUser = message.role === 'user';
+  const displayContent = isUser ? message.content : sanitizeContent(message.content);
 
   return (
     <div
@@ -38,7 +47,7 @@ export function ChatMessage({ message, isLatest }: ChatMessageProps) {
         </p>
         <div className="prose prose-invert max-w-none">
           <p className="text-foreground whitespace-pre-wrap leading-relaxed">
-            {message.content}
+            {displayContent}
             {isLatest && !isUser && (
               <span className="inline-block w-2 h-4 bg-primary ml-1 animate-pulse" />
             )}
