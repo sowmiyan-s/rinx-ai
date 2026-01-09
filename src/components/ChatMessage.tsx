@@ -1,4 +1,6 @@
 import { User, Bot } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
 import type { Message } from '@/hooks/useChat';
 
@@ -7,17 +9,8 @@ interface ChatMessageProps {
   isLatest?: boolean;
 }
 
-// Sanitize bot responses by removing unwanted symbols
-const sanitizeContent = (content: string): string => {
-  return content
-    .replace(/[%*\-$#]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-};
-
 export function ChatMessage({ message, isLatest }: ChatMessageProps) {
   const isUser = message.role === 'user';
-  const displayContent = isUser ? message.content : sanitizeContent(message.content);
 
   return (
     <div
@@ -45,14 +38,118 @@ export function ChatMessage({ message, isLatest }: ChatMessageProps) {
         <p className="text-sm font-medium text-muted-foreground">
           {isUser ? 'You' : 'RinX AI'}
         </p>
-        <div className="prose prose-invert max-w-none">
+        
+        {isUser ? (
           <p className="text-foreground whitespace-pre-wrap leading-relaxed">
-            {displayContent}
-            {isLatest && !isUser && (
+            {message.content}
+          </p>
+        ) : (
+          <div className="prose prose-invert prose-sm max-w-none">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => (
+                  <h1 className="text-xl font-bold text-foreground mt-4 mb-2 first:mt-0">
+                    {children}
+                  </h1>
+                ),
+                h2: ({ children }) => (
+                  <h2 className="text-lg font-semibold text-foreground mt-4 mb-2 first:mt-0">
+                    {children}
+                  </h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="text-base font-semibold text-foreground mt-3 mb-1">
+                    {children}
+                  </h3>
+                ),
+                p: ({ children }) => (
+                  <p className="text-foreground leading-relaxed mb-3 last:mb-0">
+                    {children}
+                  </p>
+                ),
+                strong: ({ children }) => (
+                  <strong className="font-semibold text-primary">{children}</strong>
+                ),
+                em: ({ children }) => (
+                  <em className="italic text-foreground/90">{children}</em>
+                ),
+                code: ({ className, children, ...props }) => {
+                  const isInline = !className;
+                  if (isInline) {
+                    return (
+                      <code className="px-1.5 py-0.5 rounded bg-secondary text-primary font-mono text-sm">
+                        {children}
+                      </code>
+                    );
+                  }
+                  return (
+                    <code
+                      className={cn(
+                        'block p-4 rounded-lg bg-secondary/80 font-mono text-sm overflow-x-auto',
+                        className
+                      )}
+                      {...props}
+                    >
+                      {children}
+                    </code>
+                  );
+                },
+                pre: ({ children }) => (
+                  <pre className="my-3 rounded-lg overflow-hidden">{children}</pre>
+                ),
+                ul: ({ children }) => (
+                  <ul className="list-disc list-inside space-y-1 mb-3 text-foreground">
+                    {children}
+                  </ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="list-decimal list-inside space-y-1 mb-3 text-foreground">
+                    {children}
+                  </ol>
+                ),
+                li: ({ children }) => (
+                  <li className="text-foreground leading-relaxed">{children}</li>
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-3">
+                    {children}
+                  </blockquote>
+                ),
+                a: ({ href, children }) => (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    {children}
+                  </a>
+                ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto my-3">
+                    <table className="min-w-full border border-border rounded-lg">
+                      {children}
+                    </table>
+                  </div>
+                ),
+                th: ({ children }) => (
+                  <th className="px-3 py-2 bg-secondary text-left font-semibold border-b border-border">
+                    {children}
+                  </th>
+                ),
+                td: ({ children }) => (
+                  <td className="px-3 py-2 border-b border-border">{children}</td>
+                ),
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
+            {isLatest && (
               <span className="inline-block w-2 h-4 bg-primary ml-1 animate-pulse" />
             )}
-          </p>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
