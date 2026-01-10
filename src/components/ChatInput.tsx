@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Square } from 'lucide-react';
+import { ArrowUp, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -37,60 +37,62 @@ export function ChatInput({ onSend, onStop, isLoading, disabled }: ChatInputProp
   }, [message]);
 
   return (
-    <div className="border-t border-border bg-background/95 backdrop-blur-sm p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto flex items-end gap-3"
-      >
-        <div className="flex-1 relative">
-          <textarea
-            ref={textareaRef}
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Message RinX AI..."
-            disabled={disabled}
-            rows={1}
-            className={cn(
-              'w-full resize-none rounded-2xl border border-border bg-secondary/50 px-4 py-3 pr-12',
-              'text-foreground placeholder:text-muted-foreground',
-              'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary',
-              'transition-all duration-200',
-              'scrollbar-thin',
-              disabled && 'opacity-50 cursor-not-allowed'
-            )}
-          />
-        </div>
+    <div className="border-t border-border bg-background p-4">
+      <div className="max-w-3xl mx-auto">
+        <form
+          onSubmit={handleSubmit}
+          className="relative flex items-end"
+        >
+          <div className="flex-1 relative border border-border rounded-2xl bg-secondary/50 focus-within:border-muted-foreground transition-colors">
+            <textarea
+              ref={textareaRef}
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Message RinX AI..."
+              disabled={disabled}
+              rows={1}
+              className={cn(
+                'w-full resize-none bg-transparent px-4 py-3 pr-14',
+                'text-foreground placeholder:text-muted-foreground',
+                'focus:outline-none',
+                'scrollbar-thin',
+                disabled && 'opacity-50 cursor-not-allowed'
+              )}
+            />
+            <div className="absolute right-2 bottom-2">
+              {isLoading ? (
+                <Button
+                  type="button"
+                  onClick={onStop}
+                  size="icon"
+                  className="h-8 w-8 rounded-lg bg-foreground text-background hover:bg-foreground/90"
+                >
+                  <Square className="h-3 w-3" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={!message.trim() || disabled}
+                  size="icon"
+                  className={cn(
+                    'h-8 w-8 rounded-lg transition-colors',
+                    message.trim()
+                      ? 'bg-foreground text-background hover:bg-foreground/90'
+                      : 'bg-muted text-muted-foreground cursor-not-allowed'
+                  )}
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </div>
+        </form>
 
-        {isLoading ? (
-          <Button
-            type="button"
-            onClick={onStop}
-            size="icon"
-            className="h-11 w-11 rounded-xl bg-destructive hover:bg-destructive/90"
-          >
-            <Square className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            disabled={!message.trim() || disabled}
-            size="icon"
-            className={cn(
-              'h-11 w-11 rounded-xl transition-all duration-200',
-              message.trim()
-                ? 'bg-gradient-to-r from-primary to-cyan-500 hover:from-primary/90 hover:to-cyan-500/90'
-                : 'bg-muted text-muted-foreground'
-            )}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
-        )}
-      </form>
-
-      <p className="text-center text-xs text-muted-foreground mt-3 max-w-3xl mx-auto">
-        RinX AI can make mistakes. Consider checking important information.
-      </p>
+        <p className="text-center text-xs text-muted-foreground mt-3">
+          RinX AI can make mistakes. Consider checking important information.
+        </p>
+      </div>
     </div>
   );
 }
