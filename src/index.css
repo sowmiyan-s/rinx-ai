@@ -6,56 +6,44 @@
 
 @layer base {
   :root {
-    --background: 220 13% 10%;
-    --foreground: 210 20% 95%;
+    --background: 0 0% 8%;
+    --foreground: 0 0% 93%;
 
-    --card: 220 13% 12%;
-    --card-foreground: 210 20% 95%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 93%;
 
-    --popover: 220 13% 12%;
-    --popover-foreground: 210 20% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 93%;
 
-    --primary: 174 62% 47%;
-    --primary-foreground: 220 13% 10%;
+    --primary: 0 0% 93%;
+    --primary-foreground: 0 0% 8%;
 
-    --secondary: 220 13% 18%;
-    --secondary-foreground: 210 20% 90%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 220 13% 18%;
-    --muted-foreground: 215 15% 55%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 55%;
 
-    --accent: 174 62% 47%;
-    --accent-foreground: 220 13% 10%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 93%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 13% 20%;
-    --input: 220 13% 18%;
-    --ring: 174 62% 47%;
+    --border: 0 0% 18%;
+    --input: 0 0% 14%;
+    --ring: 0 0% 60%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 220 13% 8%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 174 62% 47%;
-    --sidebar-primary-foreground: 220 13% 10%;
-    --sidebar-accent: 220 13% 15%;
-    --sidebar-accent-foreground: 210 20% 95%;
-    --sidebar-border: 220 13% 18%;
-    --sidebar-ring: 174 62% 47%;
-
-    /* Custom tokens */
-    --user-message: 220 13% 16%;
-    --assistant-message: 220 13% 12%;
-    --gradient-primary: linear-gradient(135deg, hsl(174, 62%, 47%), hsl(190, 70%, 50%));
-    --gradient-hover: linear-gradient(135deg, hsl(174, 62%, 55%), hsl(190, 70%, 58%));
-    --shadow-glow: 0 0 20px hsla(174, 62%, 47%, 0.3);
-  }
-
-  .dark {
-    --background: 220 13% 10%;
-    --foreground: 210 20% 95%;
+    --sidebar-background: 0 0% 6%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 0 0% 93%;
+    --sidebar-primary-foreground: 0 0% 8%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 93%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 0 0% 60%;
   }
 }
 
@@ -65,14 +53,14 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   }
 }
 
 @layer utilities {
   .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-track {
@@ -80,15 +68,11 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-muted rounded-full;
+    @apply bg-muted-foreground/20 rounded-full;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/30;
-  }
-
-  .message-fade-in {
-    animation: messageFadeIn 0.3s ease-out forwards;
+    @apply bg-muted-foreground/40;
   }
 
   .typing-indicator span {
@@ -108,41 +92,13 @@
   }
 }
 
-@keyframes messageFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes typingBounce {
   0%, 60%, 100% {
     transform: translateY(0);
-  }
-  30% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.1);
     opacity: 0.4;
   }
-  100% {
-    transform: scale(0.8);
-    opacity: 0.8;
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
   }
-}
-
-.pulse-ring {
-  animation: pulse-ring 2s infinite ease-in-out;
 }
