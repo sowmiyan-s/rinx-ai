@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
+import bannerImg from '@/assets/banner.png';
+import logoImg from '@/assets/logo.png';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);

@@ -1,4 +1,5 @@
 import { Lightbulb, Code, Shield, Sparkles } from 'lucide-react';
+import logoImg from '@/assets/logo.png';
 
 interface WelcomeScreenProps {
   onSuggestionClick: (suggestion: string) => void;

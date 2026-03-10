@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
 import type { Message } from '@/hooks/useChat';
+import logoImg from '@/assets/logo.png';
 
 interface ChatMessageProps {
   message: Message;
