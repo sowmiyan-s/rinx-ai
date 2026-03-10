@@ -32,7 +32,7 @@ export function ChatMessage({ message, isLatest }: ChatMessageProps) {
           {isUser ? (
             <User className="h-3.5 w-3.5 text-foreground" />
           ) : (
-            <img src="/logo.png" alt="Rin AI" className="w-7 h-7 rounded-full object-cover" />
+            <img src={logoImg} alt="Rin AI" className="w-7 h-7 rounded-full object-cover" />
           )}
         </div>
 
