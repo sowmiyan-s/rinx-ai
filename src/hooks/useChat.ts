@@ -23,11 +23,22 @@ export function useChat() {
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  const getAuthHeaders = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+    };
+  };
+
   const createConversation = async (firstMessage: string): Promise<string> => {
     const title = firstMessage.slice(0, 50) + (firstMessage.length > 50 ? '...' : '');
+    const { data: { user } } = await supabase.auth.getUser();
+    
     const { data, error } = await supabase
       .from('conversations')
-      .insert({ title })
+      .insert({ title, user_id: user?.id })
       .select()
       .single();
 
@@ -99,12 +110,10 @@ export function useChat() {
     abortControllerRef.current = new AbortController();
 
     try {
+      const headers = await getAuthHeaders();
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
+        headers,
         body: JSON.stringify({ messages: messagesForAPI }),
         signal: abortControllerRef.current.signal,
       });
@@ -140,9 +149,9 @@ export function useChat() {
 
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-            if (content) {
-              assistantContent += content;
+            const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (delta) {
+              assistantContent += delta;
               setMessages(prev => {
                 const last = prev[prev.length - 1];
                 if (last?.role === 'assistant' && last.id === assistantId) {
