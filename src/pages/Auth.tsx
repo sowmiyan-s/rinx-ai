@@ -78,7 +78,7 @@ export default function Auth() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         <div className="relative z-10 flex flex-col justify-end p-12 w-full">
           <div className="flex items-center gap-3 mb-4">
-            <img src="/logo.png" alt="Rin AI" className="w-10 h-10 rounded-lg object-cover" />
+            <img src={logoImg} alt="Rin AI" className="w-10 h-10 rounded-lg object-cover" />
             <h1 className="text-3xl font-bold text-foreground">Rin AI</h1>
           </div>
           <p className="text-muted-foreground text-base max-w-sm leading-relaxed">
