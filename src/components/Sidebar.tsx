@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import type { Conversation } from '@/hooks/useConversations';
-import logoImg from '@/assets/logo.png';
+import logoImg from '@/assets/branding/logo.png';
 
 interface SidebarProps {
   conversations: Conversation[];

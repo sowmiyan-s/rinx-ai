@@ -1,4 +1,8 @@
-# Rin AI Architecture & Workflow
+<div align="right">
+  <img src="./public/logo.png" width="80" />
+</div>
+
+# 🏗️ Rin AI Architecture & Workflow
 
 This document outlines the technical architecture and AI workflow of the Rin AI assistant.
 

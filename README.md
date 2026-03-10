@@ -1,4 +1,11 @@
-# 🌌 Rin AI - Intelligent Cloud Assistant
+<div align="center">
+  <img src="./public/banner.png" alt="Rin AI Banner" width="100%" />
+  
+  <br />
+
+  <img src="./public/logo.png" alt="Rin AI Logo" width="100" />
+  <h1>🌌 Rin AI - Intelligent Cloud Assistant</h1>
+</div>
 
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
