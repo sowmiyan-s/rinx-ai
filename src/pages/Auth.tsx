@@ -71,7 +71,7 @@ export default function Auth() {
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
-          src="/banner.png"
+          src={bannerImg}
           alt="Rin AI"
           className="absolute inset-0 w-full h-full object-cover"
         />
