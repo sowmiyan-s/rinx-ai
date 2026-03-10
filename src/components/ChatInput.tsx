@@ -49,7 +49,7 @@ export function ChatInput({ onSend, onStop, isLoading, disabled }: ChatInputProp
               value={message}
               onChange={e => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Message RinX AI..."
+              placeholder="Message Rin AI..."
               disabled={disabled}
               rows={1}
               className={cn(
@@ -90,7 +90,7 @@ export function ChatInput({ onSend, onStop, isLoading, disabled }: ChatInputProp
         </form>
 
         <p className="text-center text-xs text-muted-foreground mt-3">
-          RinX AI can make mistakes. Consider checking important information.
+          Rin AI can make mistakes. Consider checking important information.
         </p>
       </div>
     </div>

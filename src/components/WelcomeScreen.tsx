@@ -15,10 +15,16 @@ const suggestions = [
 export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-8 max-w-3xl mx-auto">
-      {/* Logo */}
-      <div className="mb-8">
-        <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
-          <span className="text-2xl font-semibold text-primary">R</span>
+      {/* Banner / Branding */}
+      <div className="w-full max-w-xl mb-8 rounded-2xl overflow-hidden border border-border aspect-[21/9] relative group">
+        <img
+          src="/banner.png"
+          alt="Rin AI Banner"
+          className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent flex items-bottom p-6 flex-col justify-end">
+          <h1 className="text-3xl font-bold text-foreground">Rin AI</h1>
+          <p className="text-muted-foreground text-sm">Next-Generation Intelligence</p>
         </div>
       </div>
 
@@ -27,7 +33,7 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
         How can I help you today?
       </h1>
       <p className="text-muted-foreground text-center mb-10">
-        I'm RinX AI, your intelligent assistant
+        I'm Rin AI, your intelligent assistant
       </p>
 
       {/* Suggestion Cards */}

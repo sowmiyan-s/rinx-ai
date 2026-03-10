@@ -13,7 +13,7 @@ serve(async (req) => {
   try {
     const { messages } = await req.json();
     const MISTRAL_API_KEY = Deno.env.get("MISTRAL_API_KEY");
-    
+
     if (!MISTRAL_API_KEY) {
       throw new Error("MISTRAL_API_KEY is not configured");
     }
@@ -27,9 +27,9 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "mistral-large-latest",
         messages: [
-          { 
-            role: "system", 
-            content: "You are RinX AI, a helpful, harmless, and honest AI assistant. You provide clear, accurate, and thoughtful responses. Be conversational yet professional." 
+          {
+            role: "system",
+            content: "You are Rin AI, a helpful, harmless, and honest AI assistant. You provide clear, accurate, and thoughtful responses. Be conversational yet professional."
           },
           ...messages,
         ],

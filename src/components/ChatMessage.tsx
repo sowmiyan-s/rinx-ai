@@ -27,17 +27,21 @@ export function ChatMessage({ message, isLatest }: ChatMessageProps) {
         {/* Avatar */}
         <div
           className={cn(
-            'shrink-0 w-7 h-7 rounded-sm flex items-center justify-center',
-            isUser ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
+            'shrink-0 w-7 h-7 rounded-sm flex items-center justify-center overflow-hidden',
+            isUser ? 'bg-primary text-primary-foreground' : 'bg-transparent'
           )}
         >
-          {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+          {isUser ? (
+            <User className="h-4 w-4" />
+          ) : (
+            <img src="/logo.png" alt="Rin AI" className="w-full h-full object-cover" />
+          )}
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-2">
           <p className="text-sm font-medium text-foreground">
-            {isUser ? 'You' : 'RinX AI'}
+            {isUser ? 'You' : 'Rin AI'}
           </p>
 
           {isUser ? (
@@ -190,12 +194,12 @@ export function TypingIndicator() {
   return (
     <div className="py-6 px-4 md:px-0 bg-secondary/30">
       <div className="max-w-3xl mx-auto flex gap-4">
-        <div className="shrink-0 w-7 h-7 rounded-sm bg-foreground flex items-center justify-center">
-          <Bot className="h-4 w-4 text-background" />
+        <div className="shrink-0 w-7 h-7 rounded-sm bg-transparent flex items-center justify-center overflow-hidden">
+          <img src="/logo.png" alt="Rin AI" className="w-full h-full object-cover" />
         </div>
 
         <div className="flex-1 min-w-0 space-y-2">
-          <p className="text-sm font-medium text-foreground">RinX AI</p>
+          <p className="text-sm font-medium text-foreground">Rin AI</p>
           <div className="typing-indicator flex gap-1">
             <span className="w-2 h-2 rounded-full bg-muted-foreground" />
             <span className="w-2 h-2 rounded-full bg-muted-foreground" />

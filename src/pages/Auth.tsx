@@ -14,7 +14,7 @@ export default function Auth() {
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const { user, signIn, signUp, isLoading } = useAuth();
   const navigate = useNavigate();
 
@@ -72,25 +72,28 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Panel - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-sidebar items-center justify-center p-12">
-        <div className="max-w-md text-center">
-          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-8">
-            <span className="text-4xl font-bold text-primary">R</span>
+      <div className="hidden lg:flex lg:w-1/2 bg-sidebar items-center justify-center p-0 overflow-hidden border-r border-border relative">
+        <img
+          src="/banner.png"
+          alt="Rin AI"
+          className="w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent flex items-end p-12">
+          <div className="max-w-md">
+            <h1 className="text-4xl font-bold text-foreground mb-4">Rin AI</h1>
+            <p className="text-muted-foreground text-lg">
+              Your intelligent assistant for conversations, coding, and creative tasks.
+            </p>
+            <a
+              href="https://github.com/sowmiyan-s"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-8 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Github className="w-5 h-5" />
+              <span>github.com/sowmiyan-s</span>
+            </a>
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-4">RinX AI</h1>
-          <p className="text-muted-foreground text-lg">
-            Your intelligent assistant for conversations, coding, and creative tasks.
-          </p>
-          
-          <a
-            href="https://github.com/sowmiyan-s"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-8 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Github className="w-5 h-5" />
-            <span>github.com/sowmiyan-s</span>
-          </a>
         </div>
       </div>
 
@@ -99,10 +102,10 @@ export default function Auth() {
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
-            <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <span className="text-3xl font-bold text-primary">R</span>
+            <div className="w-16 h-16 rounded-xl bg-transparent flex items-center justify-center mx-auto mb-4 overflow-hidden border border-border">
+              <img src="/logo.png" alt="Rin AI" className="w-full h-full object-cover" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">RinX AI</h1>
+            <h1 className="text-2xl font-bold text-foreground">Rin AI</h1>
           </div>
 
           <div className="space-y-6">
@@ -112,8 +115,8 @@ export default function Auth() {
               </h2>
               <p className="text-muted-foreground mt-2">
                 {isLogin
-                  ? 'Sign in to continue to RinX AI'
-                  : 'Sign up to get started with RinX AI'}
+                  ? 'Sign in to continue to Rin AI'
+                  : 'Sign up to get started with Rin AI'}
               </p>
             </div>
 

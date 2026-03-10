@@ -1,73 +1,127 @@
-# Welcome to your Lovable project
+# 🌌 Rin AI - Intelligent Cloud Assistant
 
-## Project info
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Mistral AI](https://img.shields.io/badge/Mistral%20AI-FD5521?style=for-the-badge&logo=mistralai&logoColor=white)](https://mistral.ai/)
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**Rin AI** is a premium, high-performance intelligent assistant platform. Powered by **Mistral Large** and built on a secure **Supabase** foundation, it provides real-time streaming conversations, persistent history, and robust user authentication.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## ✨ Key Features
 
-**Use Lovable**
+-   **⚡ Real-time Streaming**: Instant conversational responses with smooth UI transitions.
+-   **🔐 Secure Authentication**: Integrated user login and profile management via Supabase Auth.
+-   **💾 Persistent Memory**: Automatically saves conversation history, allowing you to pick up exactly where you left off.
+-   **🛡️ Enterprise RLS**: Row Level Security ensures data isolation and privacy for every user.
+-   **📈 Admin Dashboard**: Comprehensive oversight of user activity and message analytics.
+-   **🎨 Premium UI**: A modern, sleek interface with glassmorphism and specialized animations.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Architecture & Workflow
 
-**Use your preferred IDE**
+Rin AI leverages a specialized cloud-edge architecture. For a deep dive into the AI streaming flow and technical diagrams, please refer to:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+👉 **[View ARCHITECTURE.md](./ARCHITECTURE.md)**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🚀 Getting Started
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Prerequisites
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+-   **Node.js** (v18.x or higher)
+-   **npm** / **bun**
+-   **Supabase Account** (for database & auth)
+-   **Mistral API Key**
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 1. Installation
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd Rin-ai
+
+# Install dependencies
+npm install
+```
+
+### 2. Environment Configuration
+
+Copy the example environment file and fill in your credentials:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Source |
+| :--- | :--- |
+| `VITE_SUPABASE_URL` | Supabase Settings > API |
+| `VITE_SUPABASE_ANON_KEY` | Supabase Settings > API |
+| `MISTRAL_API_KEY` | Mistral Console |
+
+### 3. Database Setup
+
+Deploy the migrations included in the `/supabase/migrations` folder to your project using the Supabase CLI:
+
+```bash
+npx supabase migration up
+```
+
+### 4. Local Development
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🛠️ Troubleshooting AI Responses
 
-**Use GitHub Codespaces**
+If the AI is not responding, follow these steps:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1.  **Check Supabase Secrets**: The AI logic runs in a Supabase Edge Function. You **MUST** set your `MISTRAL_API_KEY` in the Supabase project secrets:
+    ```bash
+    npx supabase secrets set MISTRAL_API_KEY=tGHPNWARnRyNWWrsb7DDj0YHMQclbDlt
+    ```
+2.  **Verify Edge Function Deployment**: Ensure the function is deployed:
+    ```bash
+    npx supabase functions deploy chat --no-verify-jwt
+    ```
+    *(Note: Using `--no-verify-jwt` if you handle auth manually in the function logic)*.
+3.  **Check Edge Function Logs**: Visit your Supabase Dashboard > Edge Functions > `chat` > Logs to see any specific errors (e.g., 401 for invalid API key).
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🏗️ Tech Stack
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+-   **Frontend**: React 18, Vite, TypeScript, Tailwind CSS, shadcn/ui.
+-   **Backend**: Supabase Edge Functions (Deno).
+-   **Database**: PostgreSQL with Row Level Security.
+-   **AI Model**: Mistral Large via API.
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## 🚢 Deployment
 
-## Can I connect a custom domain to my Lovable project?
+1.  **Host the Frontend**: Use Vercel, Netlify, or **Lovable** for static deployment.
+2.  **Deploy Edge Functions**:
+    ```bash
+    npx supabase functions deploy chat
+    ```
+3.  **Configure Secrets**:
+    ```bash
+    npx supabase secrets set MISTRAL_API_KEY=your_key
+    ```
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📄 License & Attributions
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Designed and built by [Sowmiyan-S](https://github.com/sowmiyan-s).  
+*Rin AI - Intelligence Optimized.*

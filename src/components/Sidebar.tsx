@@ -104,7 +104,13 @@ export function Sidebar({
         )}
       >
         {/* Header */}
-        <div className="p-3 border-b border-border">
+        <div className="p-3 border-b border-border space-y-3">
+          <div className="flex items-center gap-3 px-1 mb-2">
+            <div className="w-8 h-8 rounded-lg overflow-hidden border border-border">
+              <img src="/logo.png" alt="Rin AI" className="w-full h-full object-cover" />
+            </div>
+            <span className="font-semibold text-foreground">Rin AI</span>
+          </div>
           <Button
             onClick={() => {
               onNewChat();
@@ -233,7 +239,7 @@ export function Sidebar({
               Admin Panel
             </Button>
           )}
-          
+
           <div className="flex items-center gap-2 p-2">
             <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
               <span className="text-sm font-medium text-foreground">
