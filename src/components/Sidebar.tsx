@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import type { Conversation } from '@/hooks/useConversations';
+import logoImg from '@/assets/logo.png';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -59,14 +60,12 @@ export function Sidebar({
     const date = new Date(dateString);
     const now = new Date();
     const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
     if (diffDays < 7) return `${diffDays} days ago`;
     return date.toLocaleDateString();
   };
 
-  // Group conversations by date
   const groupedConversations = conversations.reduce((groups, conv) => {
     const label = formatDate(conv.updated_at);
     if (!groups[label]) groups[label] = [];
@@ -76,20 +75,18 @@ export function Sidebar({
 
   return (
     <>
-      {/* Mobile toggle button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="fixed top-4 left-4 z-50 md:hidden text-foreground"
+      {/* Mobile toggle */}
+      <button
+        className="fixed top-3 left-3 z-50 md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
         onClick={onToggle}
       >
         {isOpen ? <CloseIcon className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
+      </button>
 
-      {/* Overlay for mobile */}
+      {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40 md:hidden"
           onClick={onToggle}
         />
       )}
@@ -97,84 +94,71 @@ export function Sidebar({
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-40 h-full w-64 bg-sidebar border-r border-border flex flex-col',
+          'fixed left-0 top-0 z-40 h-full w-60 bg-sidebar flex flex-col border-r border-sidebar-border',
           'transition-transform duration-200 ease-out',
           'md:translate-x-0 md:static',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         {/* Header */}
-        <div className="p-3 border-b border-border space-y-3">
-          <div className="flex items-center gap-3 px-1 mb-2">
-            <div className="w-8 h-8 rounded-lg overflow-hidden border border-border">
-              <img src="/logo.png" alt="Rin AI" className="w-full h-full object-cover" />
-            </div>
-            <span className="font-semibold text-foreground">Rin AI</span>
+        <div className="p-3 space-y-2">
+          <div className="flex items-center gap-2.5 px-1 py-1">
+            <img src={logoImg} alt="Rin AI" className="w-7 h-7 rounded-md object-cover" />
+            <span className="font-semibold text-sm text-sidebar-foreground">Rin AI</span>
           </div>
-          <Button
+          <button
             onClick={() => {
               onNewChat();
               if (window.innerWidth < 768) onToggle();
             }}
-            variant="outline"
-            className="w-full justify-start gap-2 text-foreground border-border hover:bg-secondary"
+            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-sidebar-foreground rounded-md border border-sidebar-border hover:bg-sidebar-accent transition-colors"
           >
             <Plus className="h-4 w-4" />
             New chat
-          </Button>
+          </button>
         </div>
 
-        {/* Conversations List */}
-        <div className="flex-1 overflow-y-auto p-2 scrollbar-thin">
+        {/* Conversations */}
+        <div className="flex-1 overflow-y-auto px-2 scrollbar-thin">
           {conversations.length === 0 ? (
-            <p className="text-muted-foreground text-sm text-center py-8 px-4">
-              No conversations yet. Start a new chat!
+            <p className="text-muted-foreground text-xs text-center py-8 px-3">
+              No conversations yet
             </p>
           ) : (
             Object.entries(groupedConversations).map(([dateLabel, convs]) => (
-              <div key={dateLabel} className="mb-4">
-                <p className="text-xs font-medium text-muted-foreground px-2 py-1">
+              <div key={dateLabel} className="mb-3">
+                <p className="text-[11px] font-medium text-muted-foreground px-2 py-1 uppercase tracking-wider">
                   {dateLabel}
                 </p>
-                <div className="space-y-0.5">
+                <div className="space-y-px">
                   {convs.map(conversation => (
                     <div
                       key={conversation.id}
                       className={cn(
-                        'group relative rounded-lg transition-colors',
+                        'group relative rounded-md transition-colors',
                         currentConversationId === conversation.id
-                          ? 'bg-secondary'
-                          : 'hover:bg-secondary/50'
+                          ? 'bg-sidebar-accent'
+                          : 'hover:bg-sidebar-accent/50'
                       )}
                     >
                       {editingId === conversation.id ? (
-                        <div className="flex items-center gap-1 p-2">
+                        <div className="flex items-center gap-1 p-1.5">
                           <Input
                             value={editTitle}
                             onChange={e => setEditTitle(e.target.value)}
-                            className="h-7 text-sm bg-background border-border"
+                            className="h-7 text-xs bg-background border-border"
                             autoFocus
                             onKeyDown={e => {
                               if (e.key === 'Enter') handleSaveEdit(conversation.id);
                               if (e.key === 'Escape') handleCancelEdit();
                             }}
                           />
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 shrink-0"
-                            onClick={() => handleSaveEdit(conversation.id)}
-                          >
-                            <Check className="h-3 w-3 text-primary" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 shrink-0"
-                            onClick={handleCancelEdit}
-                          >
+                          <button onClick={() => handleSaveEdit(conversation.id)} className="p-1 text-foreground hover:text-foreground/80">
+                            <Check className="h-3 w-3" />
+                          </button>
+                          <button onClick={handleCancelEdit} className="p-1 text-muted-foreground hover:text-foreground">
                             <X className="h-3 w-3" />
-                          </Button>
+                          </button>
                         </div>
                       ) : (
                         <button
@@ -182,41 +166,28 @@ export function Sidebar({
                             onSelectConversation(conversation.id);
                             if (window.innerWidth < 768) onToggle();
                           }}
-                          className="w-full text-left p-2 pr-16"
+                          className="w-full text-left px-2.5 py-2 pr-14"
                         >
-                          <div className="flex items-center gap-2">
-                            <MessageSquare className="h-4 w-4 text-muted-foreground shrink-0" />
-                            <span className="text-sm text-foreground truncate">
-                              {conversation.title}
-                            </span>
-                          </div>
+                          <span className="text-sm text-sidebar-foreground truncate block">
+                            {conversation.title}
+                          </span>
                         </button>
                       )}
 
                       {editingId !== conversation.id && (
                         <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6"
-                            onClick={e => {
-                              e.stopPropagation();
-                              handleStartEdit(conversation);
-                            }}
+                          <button
+                            onClick={e => { e.stopPropagation(); handleStartEdit(conversation); }}
+                            className="p-1 text-muted-foreground hover:text-foreground"
                           >
-                            <Edit2 className="h-3 w-3 text-muted-foreground" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                            onClick={e => {
-                              e.stopPropagation();
-                              onDeleteConversation(conversation.id);
-                            }}
+                            <Edit2 className="h-3 w-3" />
+                          </button>
+                          <button
+                            onClick={e => { e.stopPropagation(); onDeleteConversation(conversation.id); }}
+                            className="p-1 text-muted-foreground hover:text-destructive"
                           >
                             <Trash2 className="h-3 w-3" />
-                          </Button>
+                          </button>
                         </div>
                       )}
                     </div>
@@ -228,46 +199,41 @@ export function Sidebar({
         </div>
 
         {/* Footer */}
-        <div className="p-2 border-t border-border space-y-1">
+        <div className="p-2 border-t border-sidebar-border space-y-1">
           {isAdmin && (
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary"
+            <button
+              className="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-md transition-colors"
               onClick={() => navigate('/admin')}
             >
               <Settings className="h-4 w-4" />
               Admin Panel
-            </Button>
+            </button>
           )}
 
-          <div className="flex items-center gap-2 p-2">
-            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-              <span className="text-sm font-medium text-foreground">
+          <div className="flex items-center gap-2 px-2.5 py-2">
+            <div className="w-7 h-7 rounded-full bg-sidebar-accent flex items-center justify-center shrink-0">
+              <span className="text-xs font-medium text-sidebar-foreground">
                 {(profile?.display_name || profile?.email || 'U')[0].toUpperCase()}
               </span>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-foreground truncate">
-                {profile?.display_name || profile?.email?.split('@')[0]}
-              </p>
-            </div>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            <p className="flex-1 text-sm text-sidebar-foreground truncate min-w-0">
+              {profile?.display_name || profile?.email?.split('@')[0]}
+            </p>
+            <button
               onClick={handleSignOut}
+              className="p-1 text-muted-foreground hover:text-foreground transition-colors"
             >
               <LogOut className="h-4 w-4" />
-            </Button>
+            </button>
           </div>
 
           <a
             href="https://github.com/sowmiyan-s"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-muted-foreground hover:text-sidebar-foreground transition-colors"
           >
-            <Github className="h-3.5 w-3.5" />
+            <Github className="h-3 w-3" />
             github.com/sowmiyan-s
           </a>
         </div>

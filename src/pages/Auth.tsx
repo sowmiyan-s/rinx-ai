@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
-import { cn } from '@/lib/utils';
+import bannerImg from '@/assets/banner.png';
+import logoImg from '@/assets/logo.png';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -33,11 +34,9 @@ export default function Auth() {
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            setError('Invalid email or password. Please try again.');
-          } else {
-            setError(error.message);
-          }
+          setError(error.message.includes('Invalid login credentials')
+            ? 'Invalid email or password.'
+            : error.message);
         }
       } else {
         if (password.length < 6) {
@@ -47,14 +46,12 @@ export default function Auth() {
         }
         const { error } = await signUp(email, password, displayName);
         if (error) {
-          if (error.message.includes('already registered')) {
-            setError('This email is already registered. Please sign in instead.');
-          } else {
-            setError(error.message);
-          }
+          setError(error.message.includes('already registered')
+            ? 'This email is already registered. Please sign in.'
+            : error.message);
         }
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -64,7 +61,7 @@ export default function Auth() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin" />
       </div>
     );
   }
@@ -72,48 +69,48 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Panel - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-sidebar items-center justify-center p-0 overflow-hidden border-r border-border relative">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
-          src="/banner.png"
+          src={bannerImg}
           alt="Rin AI"
-          className="w-full h-full object-cover opacity-80"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent flex items-end p-12">
-          <div className="max-w-md">
-            <h1 className="text-4xl font-bold text-foreground mb-4">Rin AI</h1>
-            <p className="text-muted-foreground text-lg">
-              Your intelligent assistant for conversations, coding, and creative tasks.
-            </p>
-            <a
-              href="https://github.com/sowmiyan-s"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-8 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Github className="w-5 h-5" />
-              <span>github.com/sowmiyan-s</span>
-            </a>
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="relative z-10 flex flex-col justify-end p-12 w-full">
+          <div className="flex items-center gap-3 mb-4">
+            <img src={logoImg} alt="Rin AI" className="w-10 h-10 rounded-lg object-cover" />
+            <h1 className="text-3xl font-bold text-foreground">Rin AI</h1>
           </div>
+          <p className="text-muted-foreground text-base max-w-sm leading-relaxed">
+            Your intelligent assistant for conversations, coding, and creative tasks.
+          </p>
+          <a
+            href="https://github.com/sowmiyan-s"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 mt-6 text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
+            <Github className="w-4 h-4" />
+            github.com/sowmiyan-s
+          </a>
         </div>
       </div>
 
       {/* Right Panel - Auth Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-8">
+        <div className="w-full max-w-sm">
           {/* Mobile Logo */}
-          <div className="lg:hidden text-center mb-8">
-            <div className="w-16 h-16 rounded-xl bg-transparent flex items-center justify-center mx-auto mb-4 overflow-hidden border border-border">
-              <img src="/logo.png" alt="Rin AI" className="w-full h-full object-cover" />
-            </div>
-            <h1 className="text-2xl font-bold text-foreground">Rin AI</h1>
+          <div className="lg:hidden flex items-center gap-3 mb-10">
+            <img src={logoImg} alt="Rin AI" className="w-9 h-9 rounded-lg object-cover" />
+            <h1 className="text-xl font-semibold text-foreground">Rin AI</h1>
           </div>
 
           <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold text-foreground">
+            <div>
+              <h2 className="text-xl font-semibold text-foreground">
                 {isLogin ? 'Welcome back' : 'Create account'}
               </h2>
-              <p className="text-muted-foreground mt-2">
+              <p className="text-muted-foreground text-sm mt-1">
                 {isLogin
                   ? 'Sign in to continue to Rin AI'
                   : 'Sign up to get started with Rin AI'}
@@ -122,30 +119,30 @@ export default function Auth() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
-                <div className="space-y-2">
-                  <Label htmlFor="displayName" className="text-foreground">
+                <div className="space-y-1.5">
+                  <Label htmlFor="displayName" className="text-sm text-muted-foreground">
                     Display Name
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                       id="displayName"
                       type="text"
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
                       placeholder="Your name"
-                      className="pl-10 bg-secondary border-border focus:border-primary"
+                      className="pl-9 h-10 bg-secondary border-border text-foreground"
                     />
                   </div>
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-sm text-muted-foreground">
                   Email
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
@@ -153,17 +150,17 @@ export default function Auth() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className="pl-10 bg-secondary border-border focus:border-primary"
+                    className="pl-9 h-10 bg-secondary border-border text-foreground"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground">
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-sm text-muted-foreground">
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type="password"
@@ -172,24 +169,24 @@ export default function Auth() {
                     placeholder="••••••••"
                     required
                     minLength={6}
-                    className="pl-10 bg-secondary border-border focus:border-primary"
+                    className="pl-9 h-10 bg-secondary border-border text-foreground"
                   />
                 </div>
               </div>
 
               {error && (
-                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-                  <p className="text-sm text-destructive">{error}</p>
-                </div>
+                <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-md">
+                  {error}
+                </p>
               )}
 
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="w-full h-10 bg-foreground text-background hover:bg-foreground/90 font-medium"
               >
                 {isSubmitting ? (
-                  <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
                     {isLogin ? 'Sign In' : 'Create Account'}
@@ -199,20 +196,16 @@ export default function Auth() {
               </Button>
             </form>
 
-            <div className="text-center">
+            <p className="text-center text-sm text-muted-foreground">
+              {isLogin ? "Don't have an account? " : 'Already have an account? '}
               <button
                 type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setError('');
-                }}
-                className="text-primary hover:underline text-sm"
+                onClick={() => { setIsLogin(!isLogin); setError(''); }}
+                className="text-foreground hover:underline"
               >
-                {isLogin
-                  ? "Don't have an account? Sign up"
-                  : 'Already have an account? Sign in'}
+                {isLogin ? 'Sign up' : 'Sign in'}
               </button>
-            </div>
+            </p>
           </div>
         </div>
       </div>

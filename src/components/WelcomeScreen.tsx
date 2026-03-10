@@ -1,5 +1,5 @@
 import { Lightbulb, Code, Shield, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import logoImg from '@/assets/logo.png';
 
 interface WelcomeScreenProps {
   onSuggestionClick: (suggestion: string) => void;
@@ -14,42 +14,29 @@ const suggestions = [
 
 export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 max-w-3xl mx-auto">
-      {/* Banner / Branding */}
-      <div className="w-full max-w-xl mb-8 rounded-2xl overflow-hidden border border-border aspect-[21/9] relative group">
-        <img
-          src="/banner.png"
-          alt="Rin AI Banner"
-          className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent flex items-bottom p-6 flex-col justify-end">
-          <h1 className="text-3xl font-bold text-foreground">Rin AI</h1>
-          <p className="text-muted-foreground text-sm">Next-Generation Intelligence</p>
-        </div>
+    <div className="flex-1 flex flex-col items-center justify-center p-6 max-w-2xl mx-auto w-full">
+      <div className="flex items-center gap-3 mb-2">
+        <img src={logoImg} alt="Rin AI" className="w-10 h-10 rounded-lg object-cover" />
       </div>
-
-      {/* Title */}
-      <h1 className="text-2xl font-medium text-foreground text-center mb-2">
+      <h1 className="text-xl font-medium text-foreground text-center mb-1">
         How can I help you today?
       </h1>
-      <p className="text-muted-foreground text-center mb-10">
-        I'm Rin AI, your intelligent assistant
+      <p className="text-muted-foreground text-sm text-center mb-8">
+        Ask me anything — coding, writing, research, or creative tasks.
       </p>
 
-      {/* Suggestion Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-lg">
         {suggestions.map((suggestion, index) => (
-          <Button
+          <button
             key={index}
-            variant="outline"
             onClick={() => onSuggestionClick(suggestion.text)}
-            className="h-auto py-4 px-4 justify-start text-left border-border bg-transparent hover:bg-secondary transition-colors group"
+            className="flex items-start gap-3 p-3 rounded-lg border border-border bg-secondary/30 hover:bg-secondary/60 transition-colors text-left group"
           >
-            <suggestion.icon className="h-4 w-4 mr-3 text-muted-foreground group-hover:text-foreground shrink-0" />
-            <span className="text-sm text-muted-foreground group-hover:text-foreground">
+            <suggestion.icon className="h-4 w-4 mt-0.5 text-muted-foreground group-hover:text-foreground shrink-0" />
+            <span className="text-sm text-muted-foreground group-hover:text-foreground leading-snug">
               {suggestion.text}
             </span>
-          </Button>
+          </button>
         ))}
       </div>
     </div>
