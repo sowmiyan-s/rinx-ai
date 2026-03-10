@@ -16,7 +16,7 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 max-w-2xl mx-auto w-full">
       <div className="flex items-center gap-3 mb-2">
-        <img src="/logo.png" alt="Rin AI" className="w-10 h-10 rounded-lg object-cover" />
+        <img src={logoImg} alt="Rin AI" className="w-10 h-10 rounded-lg object-cover" />
       </div>
       <h1 className="text-xl font-medium text-foreground text-center mb-1">
         How can I help you today?

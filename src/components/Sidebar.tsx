@@ -103,7 +103,7 @@ export function Sidebar({
         {/* Header */}
         <div className="p-3 space-y-2">
           <div className="flex items-center gap-2.5 px-1 py-1">
-            <img src="/logo.png" alt="Rin AI" className="w-7 h-7 rounded-md object-cover" />
+            <img src={logoImg} alt="Rin AI" className="w-7 h-7 rounded-md object-cover" />
             <span className="font-semibold text-sm text-sidebar-foreground">Rin AI</span>
           </div>
           <button

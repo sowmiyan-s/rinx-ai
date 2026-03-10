@@ -101,7 +101,7 @@ export default function Auth() {
         <div className="w-full max-w-sm">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-3 mb-10">
-            <img src="/logo.png" alt="Rin AI" className="w-9 h-9 rounded-lg object-cover" />
+            <img src={logoImg} alt="Rin AI" className="w-9 h-9 rounded-lg object-cover" />
             <h1 className="text-xl font-semibold text-foreground">Rin AI</h1>
           </div>
 

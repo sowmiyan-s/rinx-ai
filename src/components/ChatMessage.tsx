@@ -148,7 +148,7 @@ export function TypingIndicator() {
     <div className="py-5 px-4 md:px-0">
       <div className="max-w-2xl mx-auto flex gap-3">
         <div className="shrink-0 w-7 h-7 rounded-full overflow-hidden mt-0.5">
-          <img src="/logo.png" alt="Rin AI" className="w-full h-full object-cover" />
+          <img src={logoImg} alt="Rin AI" className="w-full h-full object-cover" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-muted-foreground mb-1.5">Rin AI</p>
