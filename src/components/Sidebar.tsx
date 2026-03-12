@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, MessageSquare, Trash2, Edit2, Check, X, Menu, X as CloseIcon, LogOut, Settings, Github } from 'lucide-react';
+import { Plus, MessageSquare, Trash2, Edit2, Check, X, Menu, X as CloseIcon, LogOut, Settings, Github, ArrowUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import type { Conversation } from '@/hooks/useConversations';
 import logoImg from '@/assets/branding/logo.png';
+import bannerImg from '@/assets/branding/banner.png';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -94,70 +95,82 @@ export function Sidebar({
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-40 h-full w-60 bg-sidebar flex flex-col border-r border-sidebar-border',
-          'transition-transform duration-200 ease-out',
+          'fixed left-0 top-0 z-40 h-full w-64 bg-sidebar/80 backdrop-blur-xl flex flex-col border-r border-white/5',
+          'transition-transform duration-300 ease-in-out',
           'md:translate-x-0 md:static',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
+        {/* Mobile Background Decoration */}
+        <div className="md:hidden absolute inset-0 z-0 opacity-[0.05] pointer-events-none overflow-hidden">
+          <img src={bannerImg} alt="" className="w-full h-full object-cover blur-2xl grayscale" />
+          <div className="absolute inset-0 bg-gradient-to-b from-sidebar via-transparent to-sidebar" />
+        </div>
+
         {/* Header */}
-        <div className="p-3 space-y-2">
-          <div className="flex items-center gap-2.5 px-1 py-1">
-            <img src={logoImg} alt="Rin AI" className="w-7 h-7 rounded-md object-cover" />
-            <span className="font-semibold text-sm text-sidebar-foreground">Rin AI</span>
+        <div className="relative z-10 p-4 space-y-4">
+          <div className="flex items-center gap-3 px-2 py-1">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-primary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition duration-500" />
+              <img src={logoImg} alt="Rin AI" className="relative w-8 h-8 rounded-lg object-cover shadow-lg border border-white/10" />
+            </div>
+            <span className="font-bold text-[15px] tracking-tight text-sidebar-foreground">Rin AI</span>
           </div>
           <button
             onClick={() => {
               onNewChat();
               if (window.innerWidth < 768) onToggle();
             }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-sidebar-foreground rounded-md border border-sidebar-border hover:bg-sidebar-accent transition-colors"
+            className="w-full flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-semibold text-sidebar-foreground rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-white/10 transition-all active:scale-[0.98] group shadow-xl"
           >
-            <Plus className="h-4 w-4" />
-            New chat
+            <div className="flex items-center gap-2">
+              <Plus className="h-4 w-4 text-primary" />
+              <span>New conversation</span>
+            </div>
+            <span className="px-1.5 py-0.5 rounded text-[10px] bg-white/5 text-muted-foreground/60 border border-white/5 group-hover:text-primary transition-colors">⌘K</span>
           </button>
         </div>
 
         {/* Conversations */}
-        <div className="flex-1 overflow-y-auto px-2 scrollbar-thin">
+        <div className="relative z-10 flex-1 overflow-y-auto px-3 py-2 scrollbar-thin space-y-6">
           {conversations.length === 0 ? (
-            <p className="text-muted-foreground text-xs text-center py-8 px-3">
-              No conversations yet
-            </p>
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-2">
+              <MessageSquare className="h-8 w-8 text-muted-foreground/20" />
+              <p className="text-muted-foreground/40 text-xs font-medium uppercase tracking-widest">
+                Empty archive
+              </p>
+            </div>
           ) : (
             Object.entries(groupedConversations).map(([dateLabel, convs]) => (
-              <div key={dateLabel} className="mb-3">
-                <p className="text-[11px] font-medium text-muted-foreground px-2 py-1 uppercase tracking-wider">
+              <div key={dateLabel} className="space-y-1">
+                <p className="text-[10px] font-bold text-muted-foreground/30 px-3 py-2 uppercase tracking-[0.2em]">
                   {dateLabel}
                 </p>
-                <div className="space-y-px">
+                <div className="space-y-1">
                   {convs.map(conversation => (
                     <div
                       key={conversation.id}
                       className={cn(
-                        'group relative rounded-md transition-colors',
+                        'group relative rounded-xl transition-all duration-200',
                         currentConversationId === conversation.id
-                          ? 'bg-sidebar-accent'
-                          : 'hover:bg-sidebar-accent/50'
+                          ? 'bg-white/[0.05] shadow-lg shadow-black/20 ring-1 ring-white/10'
+                          : 'hover:bg-white/[0.03]'
                       )}
                     >
                       {editingId === conversation.id ? (
-                        <div className="flex items-center gap-1 p-1.5">
+                        <div className="flex items-center gap-2 p-2">
                           <Input
                             value={editTitle}
                             onChange={e => setEditTitle(e.target.value)}
-                            className="h-7 text-xs bg-background border-border"
+                            className="h-8 text-xs bg-black/40 border-white/10 focus:ring-1 focus:ring-primary/40 rounded-lg"
                             autoFocus
                             onKeyDown={e => {
                               if (e.key === 'Enter') handleSaveEdit(conversation.id);
                               if (e.key === 'Escape') handleCancelEdit();
                             }}
                           />
-                          <button onClick={() => handleSaveEdit(conversation.id)} className="p-1 text-foreground hover:text-foreground/80">
-                            <Check className="h-3 w-3" />
-                          </button>
-                          <button onClick={handleCancelEdit} className="p-1 text-muted-foreground hover:text-foreground">
-                            <X className="h-3 w-3" />
+                          <button onClick={() => handleSaveEdit(conversation.id)} className="p-1.5 text-primary hover:scale-110 transition-transform">
+                            <Check className="h-4 w-4" />
                           </button>
                         </div>
                       ) : (
@@ -166,27 +179,32 @@ export function Sidebar({
                             onSelectConversation(conversation.id);
                             if (window.innerWidth < 768) onToggle();
                           }}
-                          className="w-full text-left px-2.5 py-2 pr-14"
+                          className="w-full text-left px-3 py-2.5 pr-14"
                         >
-                          <span className="text-sm text-sidebar-foreground truncate block">
+                          <span className={cn(
+                            'text-[13px] truncate block transition-colors font-medium',
+                            currentConversationId === conversation.id
+                              ? 'text-sidebar-foreground'
+                              : 'text-sidebar-foreground/60 group-hover:text-sidebar-foreground'
+                          )}>
                             {conversation.title}
                           </span>
                         </button>
                       )}
 
                       {editingId !== conversation.id && (
-                        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
                           <button
                             onClick={e => { e.stopPropagation(); handleStartEdit(conversation); }}
-                            className="p-1 text-muted-foreground hover:text-foreground"
+                            className="p-1.5 rounded-lg hover:bg-white/10 text-muted-foreground/60 hover:text-foreground transition-all"
                           >
-                            <Edit2 className="h-3 w-3" />
+                            <Edit2 className="h-3.5 w-3.5" />
                           </button>
                           <button
                             onClick={e => { e.stopPropagation(); onDeleteConversation(conversation.id); }}
-                            className="p-1 text-muted-foreground hover:text-destructive"
+                            className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground/60 hover:text-destructive transition-all"
                           >
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       )}
@@ -199,29 +217,35 @@ export function Sidebar({
         </div>
 
         {/* Footer */}
-        <div className="p-2 border-t border-sidebar-border space-y-1">
+        <div className="p-3 border-t border-white/5 space-y-2 bg-black/[0.1] backdrop-blur-md">
           {isAdmin && (
             <button
-              className="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-md transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-sidebar-foreground hover:bg-white/[0.05] rounded-xl transition-all"
               onClick={() => navigate('/admin')}
             >
               <Settings className="h-4 w-4" />
-              Admin Panel
+              Admin Access
             </button>
           )}
 
-          <div className="flex items-center gap-2 px-2.5 py-2">
-            <div className="w-7 h-7 rounded-full bg-sidebar-accent flex items-center justify-center shrink-0">
-              <span className="text-xs font-medium text-sidebar-foreground">
-                {(profile?.display_name || profile?.email || 'U')[0].toUpperCase()}
-              </span>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/[0.03] transition-all group">
+            <div className="relative">
+              <div className="absolute -inset-0.5 bg-primary/20 rounded-full blur opacity-0 group-hover:opacity-100 transition duration-500" />
+              <div className="relative w-8 h-8 rounded-full bg-primary/10 border border-white/10 flex items-center justify-center shrink-0">
+                <span className="text-[11px] font-bold text-primary">
+                  {(profile?.display_name || profile?.email || 'U')[0].toUpperCase()}
+                </span>
+              </div>
             </div>
-            <p className="flex-1 text-sm text-sidebar-foreground truncate min-w-0">
-              {profile?.display_name || profile?.email?.split('@')[0]}
-            </p>
+            <div className="flex-1 min-w-0">
+              <p className="text-[13px] font-semibold text-sidebar-foreground truncate">
+                {profile?.display_name || profile?.email?.split('@')[0]}
+              </p>
+              <p className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-tight">Pro Account</p>
+            </div>
             <button
               onClick={handleSignOut}
-              className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 rounded-lg hover:bg-white/10 text-muted-foreground/60 hover:text-foreground transition-all"
             >
               <LogOut className="h-4 w-4" />
             </button>
@@ -231,10 +255,13 @@ export function Sidebar({
             href="https://github.com/sowmiyan-s"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-muted-foreground hover:text-sidebar-foreground transition-colors"
+            className="flex items-center justify-between px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/40 hover:text-primary transition-all group"
           >
-            <Github className="h-3 w-3" />
-            github.com/sowmiyan-s
+            <div className="flex items-center gap-2">
+              <Github className="h-3.5 w-3.5" />
+              <span>sowmiyan-s</span>
+            </div>
+            <ArrowUp className="h-3 w-3 rotate-45 opacity-0 group-hover:opacity-100 transition-opacity" />
           </a>
         </div>
       </aside>

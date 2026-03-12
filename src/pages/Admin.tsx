@@ -146,175 +146,208 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-sidebar">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate('/')}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-xl font-semibold text-foreground">Admin Panel</h1>
-              <p className="text-sm text-muted-foreground">Manage users and conversations</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#070708] text-foreground">
+      {/* Background Decorative Elements */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] animate-pulse delay-1000" />
+      </div>
 
-      {/* Stats */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-sidebar rounded-lg p-4 border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Users className="w-5 h-5 text-primary" />
-              </div>
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="border-b border-white/5 bg-sidebar/50 backdrop-blur-xl sticky top-0 z-50">
+          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-5">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/')}
+                className="text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-xl transition-all"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
               <div>
-                <p className="text-2xl font-bold text-foreground">{users.length}</p>
-                <p className="text-sm text-muted-foreground">Total Users</p>
+                <h1 className="text-xl font-bold tracking-tight text-foreground">Admin Console</h1>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60">Manage & Audit Ecosystem</p>
               </div>
+            </div>
+            <div className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20">
+              <span className="text-[10px] font-bold uppercase tracking-tighter text-primary">System Secure</span>
             </div>
           </div>
-          <div className="bg-sidebar rounded-lg p-4 border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-primary" />
+        </header>
+
+        <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-all group overflow-hidden relative">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Users className="w-16 h-16" />
               </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">
-                  {users.reduce((acc, u) => acc + u.conversations.length, 0)}
-                </p>
-                <p className="text-sm text-muted-foreground">Total Conversations</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">Total Users</p>
+              <p className="text-4xl font-bold text-foreground tabular-nums tracking-tighter">{users.length}</p>
+              <div className="mt-4 flex items-center gap-2 text-[10px] font-bold uppercase text-green-400">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                Live Status
               </div>
+            </div>
+
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-all group overflow-hidden relative">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <MessageSquare className="w-16 h-16" />
+              </div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">Conversations</p>
+              <p className="text-4xl font-bold text-foreground tabular-nums tracking-tighter">
+                {users.reduce((acc, u) => acc + u.conversations.length, 0)}
+              </p>
+              <p className="mt-4 text-[10px] font-bold uppercase text-muted-foreground/40 italic">Active Sessions</p>
+            </div>
+
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-all group overflow-hidden relative">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <div className="flex gap-1 items-center justify-center h-16 w-16">
+                  <div className="w-1 h-8 bg-foreground rounded-full opacity-20" />
+                  <div className="w-1 h-12 bg-foreground rounded-full opacity-20" />
+                  <div className="w-1 h-6 bg-foreground rounded-full opacity-20" />
+                </div>
+              </div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">Total Signals</p>
+              <p className="text-4xl font-bold text-foreground tabular-nums tracking-tighter">{totalMessages}</p>
+              <p className="mt-4 text-[10px] font-bold uppercase text-muted-foreground/40 italic">Data processed</p>
             </div>
           </div>
-          <div className="bg-sidebar rounded-lg p-4 border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{totalMessages}</p>
-                <p className="text-sm text-muted-foreground">Total Messages</p>
-              </div>
+
+          {/* Search & Audit List */}
+          <div className="space-y-4">
+            <div className="relative group">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/40" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Audit users by identity or email..."
+                className="pl-12 h-14 bg-white/[0.02] backdrop-blur-xl border-white/5 focus:border-white/10 text-foreground text-sm font-medium rounded-2xl transition-all"
+              />
             </div>
-          </div>
-        </div>
 
-        {/* Search */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search users by email or name..."
-            className="pl-10 bg-sidebar border-border"
-          />
-        </div>
-
-        {/* Users List */}
-        <div className="space-y-2">
-          {filteredUsers.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              No users found
-            </div>
-          ) : (
-            filteredUsers.map(user => (
-              <div key={user.id} className="bg-sidebar rounded-lg border border-border overflow-hidden">
-                {/* User Header */}
-                <button
-                  onClick={() => toggleUser(user.id)}
-                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-secondary/50 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-sm font-medium text-primary">
-                        {(user.display_name || user.email || 'U')[0].toUpperCase()}
-                      </span>
-                    </div>
-                    <div className="text-left">
-                      <p className="text-sm font-medium text-foreground">
-                        {user.display_name || 'No name'}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{user.email}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-xs text-muted-foreground">
-                      {user.conversations.length} conversations
-                    </span>
-                    {expandedUsers.has(user.id) ? (
-                      <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                    )}
-                  </div>
-                </button>
-
-                {/* Conversations */}
-                {expandedUsers.has(user.id) && (
-                  <div className="border-t border-border">
-                    {user.conversations.length === 0 ? (
-                      <p className="px-4 py-3 text-sm text-muted-foreground">No conversations</p>
-                    ) : (
-                      user.conversations.map(conv => (
-                        <div key={conv.id} className="border-b border-border last:border-b-0">
-                          <button
-                            onClick={() => toggleConversation(conv.id)}
-                            className="w-full px-4 py-2 pl-12 flex items-center justify-between hover:bg-secondary/30 transition-colors"
-                          >
-                            <span className="text-sm text-foreground truncate">{conv.title}</span>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-muted-foreground">
-                                {conv.messages.length} messages
-                              </span>
-                              {expandedConversations.has(conv.id) ? (
-                                <ChevronDown className="w-3 h-3 text-muted-foreground" />
-                              ) : (
-                                <ChevronRight className="w-3 h-3 text-muted-foreground" />
-                              )}
-                            </div>
-                          </button>
-
-                          {/* Messages */}
-                          {expandedConversations.has(conv.id) && (
-                            <div className="px-4 py-2 pl-16 bg-background/50 space-y-2 max-h-96 overflow-y-auto">
-                              {conv.messages.map(msg => (
-                                <div
-                                  key={msg.id}
-                                  className={cn(
-                                    'p-2 rounded text-sm',
-                                    msg.role === 'user'
-                                      ? 'bg-primary/10 text-foreground'
-                                      : 'bg-secondary text-foreground'
-                                  )}
-                                >
-                                  <p className="text-xs text-muted-foreground mb-1">
-                                    {msg.role === 'user' ? 'User' : 'AI'}
-                                  </p>
-                                  <p className="whitespace-pre-wrap break-words">
-                                    {msg.content.length > 500
-                                      ? msg.content.slice(0, 500) + '...'
-                                      : msg.content}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+            <div className="space-y-3">
+              {filteredUsers.length === 0 ? (
+                <div className="text-center py-20 bg-white/[0.01] border border-white/5 rounded-3xl">
+                  <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground/20">No matching identities found</p>
+                </div>
+              ) : (
+                filteredUsers.map(user => (
+                  <div key={user.id} className="bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-xl rounded-3xl border border-white/5 overflow-hidden transition-all group/user shadow-2xl">
+                    {/* User Header */}
+                    <button
+                      onClick={() => toggleUser(user.id)}
+                      className="w-full px-6 py-4 flex items-center justify-between transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <div className="absolute -inset-0.5 bg-primary/20 rounded-full blur opacity-0 group-hover/user:opacity-100 transition duration-500" />
+                          <div className="relative w-10 h-10 rounded-full bg-primary/10 border border-white/10 flex items-center justify-center shrink-0">
+                            <span className="text-xs font-bold text-primary">
+                              {(user.display_name || user.email || 'U')[0].toUpperCase()}
+                            </span>
+                          </div>
                         </div>
-                      ))
+                        <div className="text-left">
+                          <p className="text-sm font-bold text-foreground">
+                            {user.display_name || 'Anonymous Identity'}
+                          </p>
+                          <p className="text-[11px] font-medium text-muted-foreground/60">{user.email}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-6">
+                        <div className="text-right hidden sm:block">
+                          <p className="text-xs font-bold text-foreground">{user.conversations.length}</p>
+                          <p className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground/40">Sessions</p>
+                        </div>
+                        <div className={cn(
+                          "p-2 rounded-xl transition-all",
+                          expandedUsers.has(user.id) ? "bg-white/10 text-foreground" : "text-muted-foreground/40 group-hover/user:text-foreground"
+                        )}>
+                          {expandedUsers.has(user.id) ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Conversations List */}
+                    {expandedUsers.has(user.id) && (
+                      <div className="border-t border-white/5 bg-black/20 animate-in fade-in slide-in-from-top-2 duration-300">
+                        {user.conversations.length === 0 ? (
+                          <div className="px-10 py-6">
+                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/20">Archive empty for this identity</p>
+                          </div>
+                        ) : (
+                          <div className="p-4 space-y-1">
+                            {user.conversations.map(conv => (
+                              <div key={conv.id} className="rounded-2xl bg-white/[0.02] border border-white/5 overflow-hidden group/conv">
+                                <button
+                                  onClick={() => toggleConversation(conv.id)}
+                                  className="w-full px-6 py-3 flex items-center justify-between hover:bg-white/[0.03] transition-colors"
+                                >
+                                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                                    <div className="p-1.5 rounded-lg bg-white/5 group-hover/conv:bg-primary/10 transition-colors">
+                                      <MessageSquare className="w-3.5 h-3.5 text-muted-foreground group-hover/conv:text-primary" />
+                                    </div>
+                                    <span className="text-xs font-bold text-foreground truncate">{conv.title}</span>
+                                  </div>
+                                  <div className="flex items-center gap-4">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 whitespace-nowrap">
+                                      {conv.messages.length} signals
+                                    </span>
+                                    {expandedConversations.has(conv.id) ? (
+                                      <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+                                    ) : (
+                                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                                    )}
+                                  </div>
+                                </button>
+
+                                {/* Signals Audit */}
+                                {expandedConversations.has(conv.id) && (
+                                  <div className="px-6 pb-6 pt-2 space-y-3 max-h-[500px] overflow-y-auto scrollbar-thin">
+                                    {conv.messages.map(msg => (
+                                      <div
+                                        key={msg.id}
+                                        className={cn(
+                                          'p-4 rounded-2xl border transition-all',
+                                          msg.role === 'user'
+                                            ? 'bg-primary/5 border-primary/10 text-foreground'
+                                            : 'bg-white/5 border-white/5 text-foreground/80'
+                                        )}
+                                      >
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <div className={cn(
+                                            "w-1.5 h-1.5 rounded-full",
+                                            msg.role === 'user' ? "bg-primary" : "bg-muted-foreground/60"
+                                          )} />
+                                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40">
+                                            {msg.role === 'user' ? 'Identity Signal' : 'AI Output'}
+                                          </p>
+                                        </div>
+                                        <p className="text-[13px] leading-relaxed whitespace-pre-wrap break-words font-medium">
+                                          {msg.content.length > 800
+                                            ? msg.content.slice(0, 800) + '...'
+                                            : msg.content}
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
-              </div>
-            ))
-          )}
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

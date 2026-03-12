@@ -36,43 +36,44 @@ export function ChatInput({ onSend, onStop, isLoading, disabled }: ChatInputProp
   }, [message]);
 
   return (
-    <div className="p-3 pb-4">
-      <div className="max-w-2xl mx-auto">
-        <form onSubmit={handleSubmit} className="relative">
-          <div className="border border-border rounded-xl bg-secondary/40 focus-within:border-muted-foreground/50 transition-colors">
+    <div className="p-4 pb-6 px-6">
+      <div className="max-w-3xl mx-auto">
+        <form onSubmit={handleSubmit} className="relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
+          <div className="relative border border-white/5 rounded-2xl bg-secondary/20 backdrop-blur-xl focus-within:border-white/10 focus-within:bg-secondary/30 transition-all shadow-2xl">
             <textarea
               ref={textareaRef}
               value={message}
               onChange={e => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Message Rin AI..."
+              placeholder="How can I help you today?"
               disabled={disabled}
               rows={1}
               className={cn(
-                'w-full resize-none bg-transparent px-4 py-3 pr-12 text-sm',
-                'text-foreground placeholder:text-muted-foreground',
-                'focus:outline-none scrollbar-thin',
+                'w-full resize-none bg-transparent px-5 py-4 pr-14 text-[15px]',
+                'text-foreground placeholder:text-muted-foreground/60',
+                'focus:outline-none scrollbar-thin leading-relaxed',
                 disabled && 'opacity-50 cursor-not-allowed'
               )}
             />
-            <div className="absolute right-2 bottom-2">
+            <div className="absolute right-2.5 bottom-2.5">
               {isLoading ? (
                 <button
                   type="button"
                   onClick={onStop}
-                  className="h-7 w-7 rounded-md bg-foreground text-background flex items-center justify-center hover:bg-foreground/90 transition-colors"
+                  className="h-8 w-8 rounded-xl bg-foreground text-background flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg"
                 >
-                  <Square className="h-3 w-3" />
+                  <Square className="h-3 w-3 fill-current" />
                 </button>
               ) : (
                 <button
                   type="submit"
                   disabled={!message.trim() || disabled}
                   className={cn(
-                    'h-7 w-7 rounded-md flex items-center justify-center transition-colors',
+                    'h-8 w-8 rounded-xl flex items-center justify-center transition-all shadow-lg',
                     message.trim()
-                      ? 'bg-foreground text-background hover:bg-foreground/90'
-                      : 'bg-muted text-muted-foreground cursor-not-allowed'
+                      ? 'bg-foreground text-background hover:scale-105 active:scale-95'
+                      : 'bg-muted/50 text-muted-foreground cursor-not-allowed'
                   )}
                 >
                   <ArrowUp className="h-4 w-4" />
@@ -81,8 +82,8 @@ export function ChatInput({ onSend, onStop, isLoading, disabled }: ChatInputProp
             </div>
           </div>
         </form>
-        <p className="text-center text-[11px] text-muted-foreground mt-2">
-          Rin AI can make mistakes. Consider checking important information.
+        <p className="text-center text-[11px] text-muted-foreground/50 mt-3 font-medium uppercase tracking-tight">
+          Mistral model powered chatbot • Intelligence Optimized
         </p>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { ChatArea } from '@/components/ChatArea';
 import { useChat } from '@/hooks/useChat';
 import { useConversations } from '@/hooks/useConversations';
 import { useAuth } from '@/hooks/useAuth';
+import bannerImg from '@/assets/branding/banner.png';
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -70,7 +71,7 @@ const Index = () => {
   }
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-[100dvh] bg-[#070708] overflow-hidden text-foreground">
       <Sidebar
         conversations={conversations}
         currentConversationId={currentConversationId}
@@ -82,14 +83,30 @@ const Index = () => {
         onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
 
-      <main className="flex-1 flex flex-col min-w-0">
-        <div className="h-14 md:hidden shrink-0" />
-        <ChatArea
-          messages={messages}
-          isLoading={isLoading}
-          onSend={sendMessage}
-          onStop={stopGeneration}
-        />
+      <main className="flex-1 flex flex-col min-w-0 relative h-full">
+        {/* Background Decorative Elements */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          {/* Desktop Gradient */}
+          <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />
+          
+          {/* Mobile Banner Background */}
+          <div className="md:hidden absolute inset-0 opacity-[0.03] grayscale contrast-125">
+            <img src={bannerImg} alt="" className="w-full h-full object-cover blur-3xl scale-125" />
+          </div>
+          <div className="md:hidden absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+        </div>
+
+        {/* Mobile Header Spacer */}
+        <div className="h-16 md:hidden shrink-0" />
+        
+        <div className="flex-1 min-h-0 relative z-10 flex flex-col">
+          <ChatArea
+            messages={messages}
+            isLoading={isLoading}
+            onSend={sendMessage}
+            onStop={stopGeneration}
+          />
+        </div>
       </main>
     </div>
   );
