@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { lovable } from '@/integrations/lovable/index';
+import { supabase } from '@/integrations/supabase/client';
 import logoImg from '@/assets/branding/logo.png';
 import bannerImg from '@/assets/branding/banner.png';
 
@@ -82,7 +82,7 @@ export default function Auth() {
 
         {/* Bottom copy */}
         <div style={styles.leftBottom}>
-          <p style={styles.leftTagline}>The Intelligence Nexus</p>
+
           <h2 style={styles.leftHeadline}>
             Built to think.<br />Designed to feel.
           </h2>
@@ -105,10 +105,7 @@ export default function Auth() {
         {/* Mobile header */}
         <div style={styles.mobileHeader}>
           <img src={logoImg} alt="Rin" style={styles.mobileLogoImg} />
-          <div>
-            <div style={styles.mobileBrand}>Rin AI</div>
-            <div style={styles.mobileTagline}>The Intelligence Nexus</div>
-          </div>
+          <div style={styles.mobileBrand}>Rin AI</div>
         </div>
 
         {/* Card */}
@@ -258,12 +255,11 @@ export default function Auth() {
               setGoogleLoading(true);
               setError('');
               try {
-                const result = await lovable.auth.signInWithOAuth('google', {
-                  redirect_uri: window.location.origin,
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: 'google',
+                  options: { redirectTo: `${window.location.origin}/` },
                 });
-                if (result?.error) {
-                  setError('Google sign-in failed. Please try again.');
-                }
+                if (error) setError('Google sign-in failed. Please try again.');
               } catch {
                 setError('Google sign-in failed. Please try again.');
               } finally {
