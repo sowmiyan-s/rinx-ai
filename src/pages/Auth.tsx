@@ -17,7 +17,7 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const { user, signIn, signUp, signInWithGithub, isLoading } = useAuth();
+  const { user, signIn, signUp, isLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
