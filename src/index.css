@@ -123,3 +123,16 @@
     opacity: 1;
   }
 }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Auth page – show the left image panel on desktop */
+@media (min-width: 1024px) {
+  .auth-left-panel {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}

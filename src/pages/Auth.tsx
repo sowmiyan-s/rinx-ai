@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight, Github } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Mail, Lock, User, ArrowRight, Github, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import logoImg from '@/assets/branding/logo.png';
 import bannerImg from '@/assets/branding/banner.png';
-import loginBg1 from '@/assets/backgrounds/login_bg_1.png';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,8 +12,11 @@ export default function Auth() {
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const { user, signIn, signUp, isLoading } = useAuth();
+  const { user, signIn, signUp, signInWithGithub, isLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,203 +60,672 @@ export default function Auth() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin" />
+      <div style={styles.loadingWrapper}>
+        <div style={styles.spinner} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background relative flex items-center justify-center p-6 lg:p-12 overflow-hidden">
-      {/* Main Background Image */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src={bannerImg} 
-          alt="" 
-          className="w-full h-full object-cover opacity-20 scale-105 blur-sm" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/80 to-background/40" />
+    <div style={styles.root}>
+      {/* ── Left panel (desktop only) ── */}
+      <div className="auth-left-panel" style={styles.leftPanel}>
+        <img src={bannerImg} alt="Rin AI" style={styles.leftBg} />
+        <div style={styles.leftOverlay} />
+
+        {/* Top brand mark */}
+        <div style={styles.leftTop}>
+          <img src={logoImg} alt="Rin" style={styles.leftLogo} />
+          <span style={styles.leftBrand}>Rin AI</span>
+        </div>
+
+        {/* Bottom copy */}
+        <div style={styles.leftBottom}>
+          <p style={styles.leftTagline}>The Intelligence Nexus</p>
+          <h2 style={styles.leftHeadline}>
+            Built to think.<br />Designed to feel.
+          </h2>
+          <p style={styles.leftSub}>
+            Powered by Mistral's most advanced language models — your creative co‑pilot is ready.
+          </p>
+
+          {/* small proof dots */}
+          <div style={styles.pillRow}>
+            {['Fast', 'Private', 'Creative'].map((t) => (
+              <span key={t} style={styles.pill}>{t}</span>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="relative z-10 w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
-        {/* Left Side - Premium Banner Container */}
-        <div className="hidden lg:block relative group h-[620px]">
-          <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-primary/10 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000" />
-          <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
-            <img
-              src={bannerImg}
-              alt="Rin AI"
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-10 space-y-4">
-              <div className="flex items-center gap-3">
-                <img src={logoImg} alt="" className="w-10 h-10 rounded-xl" />
-                <h2 className="text-3xl font-bold tracking-tighter text-white text-glow">Rin AI</h2>
-              </div>
-              <p className="text-white/70 text-sm max-w-xs font-medium leading-relaxed">
-                Experience the next generation of creative intelligence, powered by Mistral's most advanced language models.
-              </p>
-            </div>
+      {/* ── Right panel ── */}
+      <div style={styles.rightPanel}>
+
+        {/* Mobile header */}
+        <div style={styles.mobileHeader}>
+          <img src={logoImg} alt="Rin" style={styles.mobileLogoImg} />
+          <div>
+            <div style={styles.mobileBrand}>Rin AI</div>
+            <div style={styles.mobileTagline}>The Intelligence Nexus</div>
           </div>
         </div>
 
-        {/* Right Side - Auth Form */}
-        <div className="w-full max-w-[440px] mx-auto relative">
-          {/* Mobile Background Banner */}
-          <div className="lg:hidden absolute inset-0 -inset-x-6 -inset-y-12 z-0 opacity-20 pointer-events-none">
-            <img 
-              src={loginBg1} 
-              alt="" 
-              className="w-full h-full object-cover blur-2xl scale-125" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-          </div>
+        {/* Card */}
+        <div style={styles.card}>
 
-          {/* Mobile Header */}
-          <div className="lg:hidden relative z-10 flex flex-col items-center mb-10 text-center">
-            <img 
-              src={logoImg} 
-              alt="Rin AI" 
-              className="w-16 h-16 rounded-2xl object-cover shadow-2xl border border-white/10 mb-4" 
-            />
-            <h1 className="text-4xl font-bold text-foreground mb-2 text-glow">Rin AI</h1>
-            <p className="text-muted-foreground text-sm font-medium tracking-wide">The Intelligence Nexus</p>
-          </div>
-
-          <div className="relative z-10 bg-card/40 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 lg:p-10 shadow-2xl space-y-8">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-foreground">
+          {/* Heading */}
+          <div style={styles.cardHead}>
+            <h1 style={styles.cardTitle}>
               {isLogin ? 'Welcome back' : 'Create account'}
-            </h2>
-            <p className="text-muted-foreground text-sm">
+            </h1>
+            <p style={styles.cardSub}>
               {isLogin
-                ? 'Enter your credentials to access your workspace'
-                : 'Join us to start experimenting with Mistral AI'}
+                ? 'Sign in to continue to your workspace'
+                : 'Join and start exploring Rin AI'}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Form */}
+          <form onSubmit={handleSubmit} style={styles.form} noValidate>
+
+            {/* Display Name (signup only) */}
             {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="displayName" className="text-xs font-medium uppercase tracking-wider text-muted-foreground/80">
-                  Display Name
-                </Label>
-                <div className="relative group">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
-                  <Input
+              <div style={styles.fieldGroup}>
+                <label htmlFor="displayName" style={styles.label}>Display Name</label>
+                <div style={{
+                  ...styles.inputWrap,
+                  ...(focusedField === 'displayName' ? styles.inputWrapFocused : {})
+                }}>
+                  <User style={styles.icon} size={16} strokeWidth={1.8} />
+                  <input
                     id="displayName"
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
+                    onFocus={() => setFocusedField('displayName')}
+                    onBlur={() => setFocusedField(null)}
                     placeholder="Your name"
-                    className="pl-9 h-11 bg-white/[0.03] border-white/5 focus:border-white/20 focus:ring-0 text-foreground placeholder:text-muted-foreground/50 transition-all"
+                    autoComplete="name"
+                    style={styles.input}
                   />
                 </div>
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-xs font-medium uppercase tracking-wider text-muted-foreground/80">
-                Email Address
-              </Label>
-              <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
-                <Input
+            {/* Email */}
+            <div style={styles.fieldGroup}>
+              <label htmlFor="email" style={styles.label}>Email address</label>
+              <div style={{
+                ...styles.inputWrap,
+                ...(focusedField === 'email' ? styles.inputWrapFocused : {})
+              }}>
+                <Mail style={styles.icon} size={16} strokeWidth={1.8} />
+                <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@company.com"
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField(null)}
+                  placeholder="name@example.com"
                   required
-                  className="pl-9 h-11 bg-white/[0.03] border-white/5 focus:border-white/20 focus:ring-0 text-foreground placeholder:text-muted-foreground/50 transition-all"
+                  autoComplete="email"
+                  style={styles.input}
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label htmlFor="password" className="text-xs font-medium uppercase tracking-wider text-muted-foreground/80">
-                  Password
-                </Label>
+            {/* Password */}
+            <div style={styles.fieldGroup}>
+              <div style={styles.labelRow}>
+                <label htmlFor="password" style={styles.label}>Password</label>
                 {isLogin && (
-                  <button type="button" className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground hover:text-foreground transition-colors">
-                    Forgot?
-                  </button>
+                  <button type="button" style={styles.forgotBtn}>Forgot password?</button>
                 )}
               </div>
-              <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
-                <Input
+              <div style={{
+                ...styles.inputWrap,
+                ...(focusedField === 'password' ? styles.inputWrapFocused : {})
+              }}>
+                <Lock style={styles.icon} size={16} strokeWidth={1.8} />
+                <input
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setFocusedField('password')}
+                  onBlur={() => setFocusedField(null)}
                   placeholder="••••••••"
                   required
                   minLength={6}
-                  className="pl-9 h-11 bg-white/[0.03] border-white/5 focus:border-white/20 focus:ring-0 text-foreground placeholder:text-muted-foreground/50 transition-all"
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
+                  style={{ ...styles.input, paddingRight: '2.75rem' }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={styles.eyeBtn}
+                  tabIndex={-1}
+                >
+                  {showPassword
+                    ? <EyeOff size={15} strokeWidth={1.8} />
+                    : <Eye size={15} strokeWidth={1.8} />}
+                </button>
               </div>
             </div>
 
+            {/* Error */}
             {error && (
-              <div className="text-xs font-medium text-red-400 bg-red-400/10 px-3 py-2.5 rounded-lg border border-red-400/20 animate-in fade-in slide-in-from-top-1">
+              <div style={styles.errorBox}>
+                <span style={styles.errorDot} />
                 {error}
               </div>
             )}
 
-            <Button
+            {/* Submit */}
+            <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-11 bg-white text-black hover:bg-white/90 font-semibold rounded-xl transition-all shadow-xl shadow-white/5 active:scale-[0.98]"
+              style={{
+                ...styles.submitBtn,
+                ...(isSubmitting ? styles.submitBtnDisabled : {})
+              }}
             >
               {isSubmitting ? (
-                <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                <div style={styles.submitSpinner} />
               ) : (
-                <div className="flex items-center justify-center gap-2">
-                  {isLogin ? 'Sign In' : 'Create Account'}
-                  <ArrowRight className="w-4 h-4" />
-                </div>
+                <>
+                  {isLogin ? 'Sign in' : 'Create account'}
+                  <ArrowRight size={16} strokeWidth={2} style={styles.submitArrow} />
+                </>
               )}
-            </Button>
+            </button>
           </form>
 
-          <div className="relative py-2">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/5"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase tracking-widest font-bold">
-              <span className="bg-transparent px-2 text-muted-foreground/40">or continue with</span>
-            </div>
+          {/* Divider */}
+          <div style={styles.divider}>
+            <div style={styles.dividerLine} />
+            <span style={styles.dividerText}>or continue with</span>
+            <div style={styles.dividerLine} />
           </div>
 
-          <p className="text-center text-sm text-muted-foreground font-medium">
-            {isLogin ? "New to Rin AI? " : 'Already have an account? '}
+          {/* GitHub OAuth */}
+          <button
+            type="button"
+            disabled={githubLoading}
+            onClick={async () => {
+              setGithubLoading(true);
+              await signInWithGithub();
+              setGithubLoading(false);
+            }}
+            style={{
+              ...styles.githubBtn,
+              ...(githubLoading ? styles.submitBtnDisabled : {})
+            }}
+          >
+            {githubLoading ? (
+              <div style={styles.submitSpinner} />
+            ) : (
+              <>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+                Continue with GitHub
+              </>
+            )}
+          </button>
+
+          {/* Toggle */}
+          <p style={styles.toggleText}>
+            {isLogin ? "Don't have an account? " : 'Already have an account? '}
             <button
               type="button"
               onClick={() => { setIsLogin(!isLogin); setError(''); }}
-              className="text-foreground hover:underline underline-offset-4 decoration-primary/30"
+              style={styles.toggleBtn}
             >
-              {isLogin ? 'Create one now' : 'Sign in here'}
+              {isLogin ? 'Sign up' : 'Sign in'}
             </button>
           </p>
         </div>
 
-        {/* Footer Links */}
-        <div className="mt-8 flex justify-center items-center gap-6">
+        {/* Footer */}
+        <div style={styles.footer}>
           <a
             href="https://github.com/sowmiyan-s"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            style={styles.footerLink}
           >
-            <Github className="w-4 h-4" />
+            <Github size={14} strokeWidth={1.8} />
             <span>GitHub Repository</span>
           </a>
+          <span style={styles.footerDot}>·</span>
+          <span style={styles.footerNote}>Rin AI © 2025</span>
         </div>
       </div>
     </div>
-  </div>
   );
 }
+
+/* ─────────────────────────────────────────
+   Inline styles — precise, no utility chaos
+───────────────────────────────────────── */
+const CRIMSON = '#c0392b';
+const CRIMSON_DARK = '#a93226';
+const BG = '#0a0a0b';
+const SURFACE = '#111114';
+const BORDER = 'rgba(255,255,255,0.07)';
+const BORDER_FOCUS = 'rgba(192,57,43,0.55)';
+const TEXT_PRIMARY = '#f5f5f5';
+const TEXT_MUTED = 'rgba(245,245,245,0.42)';
+const TEXT_SUBTLE = 'rgba(245,245,245,0.26)';
+
+const styles: Record<string, React.CSSProperties> = {
+  /* ── Loading ── */
+  loadingWrapper: {
+    minHeight: '100vh',
+    background: BG,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  spinner: {
+    width: 24,
+    height: 24,
+    borderRadius: '50%',
+    border: '2px solid rgba(255,255,255,0.1)',
+    borderTopColor: CRIMSON,
+    animation: 'spin 0.8s linear infinite',
+  },
+
+  /* ── Root layout ── */
+  root: {
+    minHeight: '100vh',
+    minWidth: '100vw',
+    display: 'flex',
+    background: BG,
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+    WebkitFontSmoothing: 'antialiased',
+  },
+
+  /* ── Left panel ── */
+  leftPanel: {
+    display: 'none',
+    position: 'relative',
+    overflow: 'hidden',
+    flexShrink: 0,
+    flexBasis: '46%',
+    maxWidth: '620px',
+  } as React.CSSProperties,
+  leftBg: {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  } as React.CSSProperties,
+  leftOverlay: {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(160deg, rgba(10,10,11,0.30) 0%, rgba(10,10,11,0.70) 60%, rgba(10,10,11,0.96) 100%)',
+  } as React.CSSProperties,
+  leftTop: {
+    position: 'relative',
+    zIndex: 2,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.65rem',
+    padding: '2.25rem 2.5rem',
+  } as React.CSSProperties,
+  leftLogo: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    objectFit: 'cover',
+  },
+  leftBrand: {
+    fontSize: '1.05rem',
+    fontWeight: 700,
+    color: TEXT_PRIMARY,
+    letterSpacing: '-0.02em',
+  },
+  leftBottom: {
+    position: 'absolute',
+    zIndex: 2,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: '2.5rem',
+  } as React.CSSProperties,
+  leftTagline: {
+    fontSize: '0.7rem',
+    fontWeight: 600,
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase' as const,
+    color: CRIMSON,
+    marginBottom: '0.75rem',
+    margin: '0 0 0.75rem',
+  },
+  leftHeadline: {
+    fontSize: 'clamp(1.7rem, 2.4vw, 2.25rem)',
+    fontWeight: 700,
+    color: TEXT_PRIMARY,
+    lineHeight: 1.22,
+    letterSpacing: '-0.03em',
+    margin: '0 0 1rem',
+  },
+  leftSub: {
+    fontSize: '0.85rem',
+    color: 'rgba(245,245,245,0.55)',
+    lineHeight: 1.65,
+    maxWidth: 320,
+    margin: '0 0 1.5rem',
+    fontWeight: 400,
+  },
+  pillRow: {
+    display: 'flex',
+    gap: '0.5rem',
+    flexWrap: 'wrap' as const,
+  },
+  pill: {
+    fontSize: '0.7rem',
+    fontWeight: 500,
+    color: 'rgba(245,245,245,0.55)',
+    border: '1px solid rgba(255,255,255,0.10)',
+    borderRadius: 100,
+    padding: '0.3rem 0.75rem',
+    letterSpacing: '0.04em',
+  },
+
+  /* ── Right panel ── */
+  rightPanel: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2.5rem 1.5rem',
+    overflowY: 'auto' as const,
+    gap: '2rem',
+  },
+
+  /* ── Mobile header ── */
+  mobileHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.85rem',
+  },
+  mobileLogoImg: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    objectFit: 'cover',
+    border: '1px solid rgba(255,255,255,0.09)',
+  },
+  mobileBrand: {
+    fontSize: '1.25rem',
+    fontWeight: 700,
+    color: TEXT_PRIMARY,
+    letterSpacing: '-0.025em',
+    lineHeight: 1.25,
+  },
+  mobileTagline: {
+    fontSize: '0.72rem',
+    color: TEXT_MUTED,
+    fontWeight: 400,
+    letterSpacing: '0.04em',
+    marginTop: 2,
+  },
+
+  /* ── Card ── */
+  card: {
+    width: '100%',
+    maxWidth: 420,
+    background: SURFACE,
+    border: `1px solid ${BORDER}`,
+    borderRadius: 20,
+    padding: '2.25rem 2.25rem',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '1.75rem',
+  },
+  cardHead: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '0.35rem',
+  },
+  cardTitle: {
+    fontSize: '1.35rem',
+    fontWeight: 700,
+    color: TEXT_PRIMARY,
+    letterSpacing: '-0.03em',
+    margin: 0,
+  },
+  cardSub: {
+    fontSize: '0.83rem',
+    color: TEXT_MUTED,
+    margin: 0,
+    fontWeight: 400,
+  },
+
+  /* ── Form ── */
+  form: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '1.1rem',
+  },
+  fieldGroup: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '0.45rem',
+  },
+  labelRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  label: {
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    color: 'rgba(245,245,245,0.55)',
+    letterSpacing: '0.01em',
+  },
+  forgotBtn: {
+    fontSize: '0.72rem',
+    fontWeight: 500,
+    color: TEXT_MUTED,
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    letterSpacing: '0.01em',
+    transition: 'color 0.2s',
+  },
+  inputWrap: {
+    position: 'relative' as const,
+    display: 'flex',
+    alignItems: 'center',
+    background: 'rgba(255,255,255,0.03)',
+    border: `1px solid ${BORDER}`,
+    borderRadius: 10,
+    transition: 'border-color 0.2s, background 0.2s',
+  },
+  inputWrapFocused: {
+    borderColor: BORDER_FOCUS,
+    background: 'rgba(192,57,43,0.04)',
+  },
+  icon: {
+    position: 'absolute' as const,
+    left: '0.85rem',
+    color: TEXT_SUBTLE,
+    pointerEvents: 'none' as const,
+    flexShrink: 0,
+  },
+  input: {
+    flex: 1,
+    height: 44,
+    paddingLeft: '2.5rem',
+    paddingRight: '0.85rem',
+    background: 'transparent',
+    border: 'none',
+    outline: 'none',
+    fontSize: '0.875rem',
+    color: TEXT_PRIMARY,
+    fontFamily: 'inherit',
+    width: '100%',
+  },
+  eyeBtn: {
+    position: 'absolute' as const,
+    right: '0.75rem',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: TEXT_SUBTLE,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    transition: 'color 0.2s',
+  },
+
+  /* ── Error ── */
+  errorBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.55rem',
+    fontSize: '0.8rem',
+    color: '#e57c6e',
+    background: 'rgba(192,57,43,0.08)',
+    border: '1px solid rgba(192,57,43,0.18)',
+    borderRadius: 8,
+    padding: '0.65rem 0.85rem',
+    fontWeight: 400,
+  },
+  errorDot: {
+    width: 6,
+    height: 6,
+    borderRadius: '50%',
+    background: '#e57c6e',
+    flexShrink: 0,
+  },
+
+  /* ── Submit button ── */
+  submitBtn: {
+    height: 44,
+    width: '100%',
+    marginTop: '0.25rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    background: CRIMSON,
+    color: '#fff',
+    border: 'none',
+    borderRadius: 10,
+    fontSize: '0.875rem',
+    fontWeight: 600,
+    fontFamily: 'inherit',
+    letterSpacing: '-0.01em',
+    cursor: 'pointer',
+    transition: 'background 0.2s, transform 0.15s',
+  },
+  submitBtnDisabled: {
+    opacity: 0.55,
+    cursor: 'not-allowed',
+  },
+  submitArrow: {
+    transition: 'transform 0.2s',
+  },
+  submitSpinner: {
+    width: 18,
+    height: 18,
+    border: '2px solid rgba(255,255,255,0.25)',
+    borderTopColor: '#fff',
+    borderRadius: '50%',
+    animation: 'spin 0.75s linear infinite',
+  },
+
+  /* ── Divider ── */
+  divider: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    background: BORDER,
+  },
+  dividerText: {
+    fontSize: '0.72rem',
+    fontWeight: 500,
+    color: TEXT_SUBTLE,
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase' as const,
+  },
+
+  /* ── Toggle ── */
+  toggleText: {
+    textAlign: 'center' as const,
+    fontSize: '0.82rem',
+    color: TEXT_MUTED,
+    margin: 0,
+    fontWeight: 400,
+  },
+  toggleBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.82rem',
+    color: CRIMSON,
+    fontWeight: 600,
+    padding: 0,
+    fontFamily: 'inherit',
+    letterSpacing: '-0.01em',
+  },
+
+  /* ── GitHub button ── */
+  githubBtn: {
+    height: 44,
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.6rem',
+    background: 'rgba(255,255,255,0.05)',
+    color: TEXT_PRIMARY,
+    border: `1px solid ${BORDER}`,
+    borderRadius: 10,
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    fontFamily: 'inherit',
+    cursor: 'pointer',
+    transition: 'background 0.2s, border-color 0.2s',
+    letterSpacing: '-0.01em',
+  },
+
+  /* ── Footer ── */
+  footer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.6rem',
+  },
+  footerLink: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.4rem',
+    fontSize: '0.75rem',
+    color: TEXT_MUTED,
+    textDecoration: 'none',
+    fontWeight: 400,
+    transition: 'color 0.2s',
+  },
+  footerDot: {
+    color: TEXT_SUBTLE,
+    fontSize: '0.75rem',
+  },
+  footerNote: {
+    fontSize: '0.75rem',
+    color: TEXT_SUBTLE,
+  },
+};
