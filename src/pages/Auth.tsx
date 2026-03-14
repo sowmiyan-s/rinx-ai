@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
 import logoImg from '@/assets/branding/logo.png';
 import bannerImg from '@/assets/branding/banner.png';
 
@@ -255,11 +255,10 @@ export default function Auth() {
               setGoogleLoading(true);
               setError('');
               try {
-                const { error } = await supabase.auth.signInWithOAuth({
-                  provider: 'google',
-                  options: { redirectTo: `${window.location.origin}/` },
+                const result = await lovable.auth.signInWithOAuth('google', {
+                  redirect_uri: window.location.origin,
                 });
-                if (error) setError('Google sign-in failed. Please try again.');
+                if (result?.error) setError('Google sign-in failed. Please try again.');
               } catch {
                 setError('Google sign-in failed. Please try again.');
               } finally {
