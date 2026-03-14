@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { lovable } from '@/integrations/lovable/index';
+import { supabase } from '@/integrations/supabase/client';
 import logoImg from '@/assets/branding/logo.png';
 import bannerImg from '@/assets/branding/banner.png';
 
@@ -25,6 +26,67 @@ export default function Auth() {
       navigate('/');
     }
   }, [user, isLoading, navigate]);
+
+  const isLovableHostedDomain = () => {
+    const host = window.location.hostname;
+    return host.endsWith('lovable.app') || host.endsWith('lovableproject.com');
+  };
+
+  const isAllowedOAuthHostname = (url: string) => {
+    try {
+      const parsed = new URL(url);
+      const allowedHosts = new Set(['accounts.google.com', 'oauth2.googleapis.com']);
+
+      if (import.meta.env.VITE_SUPABASE_URL) {
+        allowedHosts.add(new URL(import.meta.env.VITE_SUPABASE_URL).hostname);
+      }
+
+      return allowedHosts.has(parsed.hostname);
+    } catch {
+      return false;
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    setError('');
+
+    try {
+      if (isLovableHostedDomain()) {
+        const result = await lovable.auth.signInWithOAuth('google', {
+          redirect_uri: window.location.origin,
+        });
+
+        if (result?.error) {
+          throw result.error;
+        }
+
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`,
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data?.url || !isAllowedOAuthHostname(data.url)) {
+        throw new Error('Invalid OAuth redirect URL.');
+      }
+
+      window.location.assign(data.url);
+    } catch {
+      setError('Google sign-in failed. Please try again.');
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -251,20 +313,7 @@ export default function Auth() {
           <button
             type="button"
             disabled={googleLoading}
-            onClick={async () => {
-              setGoogleLoading(true);
-              setError('');
-              try {
-                const result = await lovable.auth.signInWithOAuth('google', {
-                  redirect_uri: window.location.origin,
-                });
-                if (result?.error) setError('Google sign-in failed. Please try again.');
-              } catch {
-                setError('Google sign-in failed. Please try again.');
-              } finally {
-                setGoogleLoading(false);
-              }
-            }}
+            onClick={handleGoogleSignIn}
             style={{
               ...styles.githubBtn,
               ...(googleLoading ? styles.submitBtnDisabled : {})
