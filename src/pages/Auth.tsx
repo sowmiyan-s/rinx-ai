@@ -313,20 +313,7 @@ export default function Auth() {
           <button
             type="button"
             disabled={googleLoading}
-            onClick={async () => {
-              setGoogleLoading(true);
-              setError('');
-              try {
-                const result = await lovable.auth.signInWithOAuth('google', {
-                  redirect_uri: window.location.origin,
-                });
-                if (result?.error) setError('Google sign-in failed. Please try again.');
-              } catch {
-                setError('Google sign-in failed. Please try again.');
-              } finally {
-                setGoogleLoading(false);
-              }
-            }}
+            onClick={handleGoogleSignIn}
             style={{
               ...styles.githubBtn,
               ...(googleLoading ? styles.submitBtnDisabled : {})
