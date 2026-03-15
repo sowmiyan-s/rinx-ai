@@ -145,23 +145,53 @@ VITE_SUPABASE_PROJECT_ID="your-project-id"
 
 ---
 
-### 5. Set Up Mistral API Key (Edge Function Secret)
+### 5. Get a Mistral AI API Key
 
-The Mistral API key is used by the Supabase Edge Function and must be stored as a **Supabase secret** — not in your frontend `.env`:
+Rin AI uses **Mistral's `mistral-large-latest` model** via their API. Follow these steps to get your key:
+
+#### 5a. Create a Mistral AI Account
+
+1. Go to [console.mistral.ai](https://console.mistral.ai)
+2. Click **Sign Up** and create an account (Google or email)
+3. Verify your email and complete onboarding
+
+#### 5b. Generate an API Key
+
+1. In the Mistral console, go to **API Keys** in the left sidebar
+2. Click **Create new key**
+3. Give it a name (e.g. `rin-ai-production`)
+4. Copy the key immediately — **it is only shown once**
+
+> 💡 Mistral offers a **free trial** with enough credits to get started. You can add billing later for production use.
+
+#### 5c. Store the Key as a Supabase Secret
+
+The Mistral key must be stored as a **Supabase Edge Function secret** — never in your frontend `.env` file, as that would expose it to users.
+
+**Option A — Supabase CLI (recommended):**
 
 ```bash
 # Login to Supabase CLI
 npx supabase login
 
-# Link to your project
+# Link your local project to your Supabase project
 npx supabase link --project-ref your-project-id
 
-# Set the Mistral API key as a secret
-npx supabase secrets set MISTRAL_API_KEY=your-mistral-api-key
+# Set the secret (replace with your actual key)
+npx supabase secrets set MISTRAL_API_KEY=your-mistral-api-key-here
 ```
 
-Or via the Supabase Dashboard:
-**Project → Settings → Edge Functions → Add secret** → `MISTRAL_API_KEY`
+**Option B — Supabase Dashboard:**
+
+1. Go to [supabase.com](https://supabase.com) → your project
+2. Navigate to **Settings → Edge Functions**
+3. Click **Add new secret**
+4. Set:
+   - **Name**: `MISTRAL_API_KEY`
+   - **Value**: *(paste your Mistral API key)*
+5. Click **Save**
+
+> ⚠️ After adding or updating the secret, **redeploy your Edge Function** (Step 6) for the change to take effect.
 
 ---
 
