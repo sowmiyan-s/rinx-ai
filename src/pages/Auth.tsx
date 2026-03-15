@@ -52,35 +52,13 @@ export default function Auth() {
     setError('');
 
     try {
-      if (isLovableHostedDomain()) {
-        const result = await lovable.auth.signInWithOAuth('google', {
-          redirect_uri: window.location.origin,
-        });
-
-        if (result?.error) {
-          throw result.error;
-        }
-
-        return;
-      }
-
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-          skipBrowserRedirect: true,
-        },
+      const result = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: window.location.origin,
       });
 
-      if (error) {
-        throw error;
+      if (result?.error) {
+        throw result.error;
       }
-
-      if (!data?.url || !isAllowedOAuthHostname(data.url)) {
-        throw new Error('Invalid OAuth redirect URL.');
-      }
-
-      window.location.assign(data.url);
     } catch {
       setError('Google sign-in failed. Please try again.');
     } finally {
